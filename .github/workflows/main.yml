@@ -14,21 +14,38 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  build-spfx:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+    uses: saif-Sb/DevopsTest/.github/workflows/build-spfx.yml@main
+  deploy_spfx_uat:
+    needs: build_spfx
+    uses: saif-Sb/DevopsTest/.github/workflows/deploy-spfx-pnp-powershell.yml@main 
+    with:
+      environment_name: UAT
+      spfx_package_name: "${{ needs.build_spfx.outputs.package_name }}"
+      site_url_prd: https://saifneos.sharepoint.com/sites/PRD
+      site_list_prd: Lists/Employee
+      site_name_prd: CommSite
+      site_copy_owner: saifneos@saifneos.onmicrosoft.com
+      webpart_name: HelloWorld
+    secrets:
+      AAD_APP_ID: ${{ secrets.AAD_APP_ID }}
+      AAD_APP_PASSWORD: ${{ secrets.AAD_APP_PASSWORD }}
+      AAD_APP_ENCODED_CERTIFICATE: ${{ secrets.AAD_APP_ENCODED_CERTIFICATE }}
+      AAD_TENANT_ID: ${{ secrets.AAD_TENANT_ID }}
+      
+  deploy_spfx_prd:
+    needs: deploy_spfx_uat
+    uses: saif-Sb/DevopsTest/.github/workflows/deploy-spfx-pnp-powershell.yml@main
+    with:
+      environment_name: PRD
+      spfx_package_name: "${{ needs.deploy_spfx_uat.outputs.sharepoint_package }}"
+      site_url_prd: https://saifneos.sharepoint.com/sites/PRD
+      site_to_remove: "${{ needs.deploy_spfx_uat.outputs.site_to_remove }}"
+      app_catalog_site_url: https://saifneos.sharepoint.com/sites/AppCatalog
+      app_catalog_scope: tenant
+    secrets:
+      AAD_APP_ID: ${{ secrets.AAD_APP_ID }}
+      AAD_APP_PASSWORD: ${{ secrets.AAD_APP_PASSWORD }}
+      AAD_APP_ENCODED_CERTIFICATE: ${{ secrets.AAD_APP_ENCODED_CERTIFICATE }}
+      AAD_TENANT_ID: ${{ secrets.AAD_TENANT_ID }}
