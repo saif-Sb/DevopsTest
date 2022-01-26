@@ -27,7 +27,7 @@ jobs:
       site_list_prd: Lists/Employee
       site_name_prd: CommSite
       site_copy_owner: saifneos@saifneos.onmicrosoft.com
-      webpart_name: HelloWorld
+      webpart_name: HelloDevops
     secrets:
       AAD_APP_ID: ${{ secrets.AAD_APP_ID }}
       AAD_APP_PASSWORD: ${{ secrets.AAD_APP_PASSWORD }}
