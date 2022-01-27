@@ -141,8 +141,7 @@ jobs:
               $securePassword = ConvertTo-SecureString "${{ secrets.AAD_APP_PASSWORD }}" -AsPlainText -Force
               Connect-PnPOnline -Url ${{ steps.step_site_copy.outputs.url }} -CertificateBase64Encoded ${{ secrets.AAD_APP_ENCODED_CERTIFICATE }} -CertificatePassword $securePassword -ClientId ${{ secrets.AAD_APP_ID }} -Tenant ${{ secrets.AAD_TENANT_ID }}
               Add-PnPSiteCollectionAppCatalog
-              $packageId = Add-PnPApp -Path "artifact/${{ inputs.spfx_package_name }}" -Scope Site -Publish
-              Install-PnPApp -Identity $packageId -Wait
+              $packageId = Add-PnPApp -Path "artifact/${{ inputs.spfx_package_name }}" -Scope Site -Publish -SkipFeatureDeployment
             }
             catch {
               Write-Host $_.Exception.Message -ForegroundColor Yellow
@@ -155,7 +154,6 @@ jobs:
                 Add-PnPSiteCollectionAppCatalog
                 Start-Sleep -Seconds 30
                 $packageId = Add-PnPApp -Path "artifact/${{ inputs.spfx_package_name }}" -Scope Site -Publish -Overwrite
-                Install-PnPApp -Identity $packageId -Wait
               }
             }
 
