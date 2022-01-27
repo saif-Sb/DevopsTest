@@ -153,7 +153,7 @@ jobs:
                 Remove-PnPSiteCollectionAppCatalog -Site ${{ steps.step_site_copy.outputs.url }}
                 Add-PnPSiteCollectionAppCatalog
                 Start-Sleep -Seconds 30
-                $packageId = Add-PnPApp -Path "artifact/${{ inputs.spfx_package_name }}" -Scope Site -Publish -Overwrite
+                $packageId = Add-PnPApp -Path "artifact/${{ inputs.spfx_package_name }}" -Scope Site -Publish -Overwrite -SkipFeatureDeployment
               }
             }
 
