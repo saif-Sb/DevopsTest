@@ -102,7 +102,7 @@ jobs:
 
             $securePassword = ConvertTo-SecureString "${{ secrets.AAD_APP_PASSWORD }}" -AsPlainText -Force
             Connect-PnPOnline -Url ${{ inputs.site_url_prd }} -CertificateBase64Encoded ${{ secrets.AAD_APP_ENCODED_CERTIFICATE }} -CertificatePassword $securePassword -ClientId ${{ secrets.AAD_APP_ID }} -Tenant ${{ secrets.AAD_TENANT_ID }}
-            $site = New-PnPSite -Type TeamSite -Title $siteName -Url $siteUrl -Owner "${{ inputs.site_copy_owner }}" -Wait
+            $site = New-PnPSite -Type CommunicationSite -Title $siteName -Url $siteUrl -Owner "${{ inputs.site_copy_owner }}" -Wait
             Write-Host "::set-output name=url::$site"
             Write-Host $site
 
